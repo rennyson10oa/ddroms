@@ -46,14 +46,14 @@ abra um terminal nessa pasta e siga as instruções de acordo com seu sistema op
 `Windows`
 
 ```sh
-pip install requirements.txt
+pip install -r requirements.txt
 python ddroms.py
 ```
 
 `Linux`
 
 ```sh
-pip3 install requirements.txt
+pip3 install -r requirements.txt
 python3 ddroms.py
 ```
 Na realidade o primeiro comando é apenas para baixar as bibliotecas e o segundo é para rodar o programa em si
