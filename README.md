@@ -18,7 +18,7 @@
 DDroms e a ferramenta perfeita para baixar seus jogos
 </h3>
 
-Com o `ddroms` e possivel baixar roms de diversos consoles disponiveis no nosso catalogo, alem de ter um funcionamento simples e eficiente, facilitando a sua vida quando quiser jogar alguns jogos, os arquivos sao pegos da pagina no-intro rom sets(2024) https://archive.org/details/ni-romsets
+Com o `ddroms`, é possível baixar roms de diversos consoles disponíveis em nosso catálogo, além de ter um funcionamento simples e eficiente, facilitando sua vida quando quiser jogar alguns jogos. Os arquivos são obtidos da página no-intro rom sets (2024) https://archive.org/details/ni-romsets
 
 ## Tabela de conteudos
 
@@ -26,22 +26,22 @@ Com o `ddroms` e possivel baixar roms de diversos consoles disponiveis no nosso 
 - [Como usar](#Exemplos)
 - [Bugs e mais avisos bacanas](#bugs-e-mais-avisos-bacanas)
 
-## Instalacao
+## Instalação
 
-Primeiro de tudo certifique-se de ter a versao mais recente do python instalada em sua maquina, baixe pelo site oficial do python:
+Primeiro de tudo certifique-se de ter a versão mais recente do python instalada em sua máquina, baixe pelo site oficial do python:
 
 ```sh
 https://www.python.org/downloads/
 ```
 
-Apos isso baixe o arquivo zip na pagina de `realeses`:
+Após isso baixe o arquivo zip na página de `realeses`:
 
-<a href="https://github.com/rennyson10oa/ddroms/releases">Pagina de releases</a>
+<a href="https://github.com/rennyson10oa/ddroms/releases">Página de releases</a>
 
  
-Quando baixar, apenas desconpacte o arquivo zip e dentro da pasta extraida tera dois arquivos: `ddroms.py, requirements.txt`
+Quando baixar, apenas descompacte o arquivo zip que conterá dois arquivos: `ddroms.py, requirements.txt`
 
-abra um terminal nessa pasta e siga as instrucoes de acordo com seu sistema operacional:
+abra um terminal nessa pasta e siga as instruções de acordo com seu sistema operacional:
 
 `Windows`
 
@@ -56,47 +56,46 @@ python ddroms.py
 pip3 install requirements.txt
 python3 ddroms.py
 ```
-Na realidade o primeiro comando e apenas para baixar as bibliotecas e o segundo e para rodar o programa em si
+Na realidade o primeiro comando é apenas para baixar as bibliotecas e o segundo é para rodar o programa em si
 
 ## Exemplos
 
-Dentro da tela do app vc sera apresentado a 2 opcoes, na primeira voce ira baixar TODAS as roms de TODOS os consoles disponiveis, e na segunda podera escolhar um console especifico, caso escolha a 1 opcao esteja preparado para ter uma grande quantidade de espaco do seu pc tomada, alem de esse processo demorar bastante.
+Dentro da tela do app, você será apresentado a 2 opções. Na primeira, você irá baixar TODAS as roms de TODOS os consoles disponíveis. Na segunda, poderá escolher um console específico. Caso escolha a 1ª opção, esteja preparado para ter uma grande quantidade de espaço do seu PC tomado, além de esse processo demorar bastante.
 
-![Pagina inicial do DDRoms](assets/inicial.png)
+![Página inicial do DDRoms](assets/inicial.png)
 
-caso escolha a segunda opcao, lhe sera mostrado uma lista de todos os consoles, e voce deve digitar o numero correspondete ao console escolhido
+Caso escolha a segunda opção, lhe será mostrada uma lista de todos os consoles, e você deve digitar o número correspondente ao console escolhido.
 
 ![Escolha de console](assets/escolha%20de%20console.png)
 
 dica: `caso queira rolar para cima no windows ou linux usando as teclas do teclado, segure shift + seta pra cima ou seta para baixo :)`
 
-apos escolher o console voce podera escolher uma das 4 opcoes abaixo, onde:
+Após escolher o console voce podera escolher uma das 4 opções abaixo, onde:
 
-`1 - voce baixa tudo desse console, simples assim`
+`1 - você baixa tudo desse console, simples assim`
 
-`2 - voce ve as roms que o console oferece e decide se quer baixa-las`
+`2 - você ve as roms que o console oferece e decide se quer baixa-las`
 
 `3 - escolhe outro console`
 
-`4 - e possivel baixar uma porcentagem do total de roms, por exemplo, se uma console tem 70 mb no total de roms voce pode baixar apenas 20% disso, ou 50%, 2%, voce decide`
+`4 - é possivel baixar uma porcentagem do total de roms, por exemplo, se um console tem 70 mb no total de roms vocé pode baixar apenas 20% disso, ou 50%, 2%, vocé decide`
 
 ![Escolha de console](assets/escolha%20de%20download.png)
 
-tambem e possivel ver quanto GB/MB um console tem:
+Tambem é possivel ver quanto GB/MB um console tem:
 
 ![Tamanho das roms](assets/roms.png)
 
 > [!AVISO]\
-> atualmente eu ainda estou desenvolvendo essa bagaca(sozinho), entao podem acontecer bugs e outras
-> coisas estranhas que eu vou listar aqui em baixo, alem de que no futuro tenho
-> o desejo de adicionar outras funcoes, como buscar roms de jogos especificos, ou
-> recomendar alguns emuladores de outras plataformas, ou ate baixar tais emuladores no seu
-> pc de forma automatica
+> Atualmente, eu ainda estou desenvolvendo essa bagaça (sozinho), então podem acontecer bugs e 
+> outras coisas estranhas que eu vou listar aqui embaixo, além de que no futuro tenho o desejo de 
+> adicionar outras funções, como buscar roms de jogos específicos, ou recomendar alguns 
+> emuladores de outras plataformas, ou até baixar tais emuladores no seu PC de forma automática.
 
-## bugs e mais avisos bacanas
+## Bugs e mais avisos bacanas
 
-como disse antes eu estou desenvolvendo isso sozinho, entao obvio que alguns bugs podem ocorrer, e se ocorrerem seria de grande ajuda se voce me mandar uma mensagem avisando sobre isso.
+Como disse antes, eu estou desenvolvendo isso sozinho, então obviamente alguns bugs podem ocorrer, e se ocorrerem, seria de grande ajuda se você me mandasse uma mensagem avisando sobre isso.
 
-nao tenho nenhum servidor onde eu poderia estar hospedando essas roms, e atualmente esse programa faz web scrapping da pagina do archive.org, essa pagina em si e um pouco lenta, entao coisas como: downloads falhando e demora para baixar alguma rom pode ser recorrente.
+Não tenho nenhum servidor onde eu poderia estar hospedando essas roms, e atualmente esse programa faz web scraping da página do archive.org. Essa página em si é um pouco lenta, então coisas como: downloads falhando e demora para baixar alguma rom podem ser recorrentes.
 
-outra coisa interessante de se lembrar e que no meio dessas roms tem algumas bios, entao ao baixar as roms de algum console voce leva de brinde as bios (mas nao posso garantir que elas funcionam, ja que nem eu testei todas)
+Outra coisa interessante de se lembrar é que no meio dessas roms tem algumas bios, então ao baixar as roms de algum console, você leva de brinde as bios (mas não posso garantir que elas funcionam, já que nem eu testei todas).
