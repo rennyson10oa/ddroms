@@ -5,6 +5,7 @@ import time
 from bs4 import BeautifulSoup
 from urllib.request import urlretrieve
 from tqdm import tqdm
+import sys
 
 def criar_nova_pasta(diretorio_pai):
     nome_nova_pasta = input("Digite o nome da nova pasta: ")
@@ -52,20 +53,81 @@ if not os.path.exists(pasta_destino):
 url = "https://archive.org/details/ni-romsets"
 response = requests.get(url)
 
+ascii_art = '''
+ ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣀⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⣀⠤⠄⠒⠋⠉⠉⠉⠉⠉⠉⠉⠑⠒⠢⢄⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀       Bem vindo ao programa de baixar
+⠀⠀⢀⡠⠖⠉⠀⠀⠀⠀⠀⠀⠀⠀⢸⠋⣑⡦⣄⠀⠀⠀⠈⠙⠢⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀       Roms, isso funciona de maneira
+⠀⠴⠿⠷⠶⣶⣦⣤⣤⣀⡀⠀⠀⠀⢸⣿⡀⠉⠛⢽⢦⣀⠀⠀⠀⠀⠑⢄⣀⣀⣠⡤⢴⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀       bem simples, voce pode baixar roms
+⠀⠀⠀⠀⠀⠀⠈⠙⣻⡿⠟⠒⠀⠀⢾⣙⣇⡠⠖⠋⠉⡉⠀⠀⠀⠀⠀⠈⠻⡏⠀⠀⡸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀       de todos os consoles disponiveis
+⠀⠀⠀⠀⠀⢀⡤⠊⠁⠀⠀⠀⠀⠀⠈⠿⠏⠀⡠⠊⢉⣉⡉⠲⢄⠀⠀⠀⠀⢹⣄⣰⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀       ou de algum especifico, e ai, vai
+⠀⠀⠀⠀⡰⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣰⠁⡼⠋⠉⠙⢷⣌⣣⡀⠀⠀⠚⣡⡯⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀       querer oq ?
+⠀⠀⢀⡞⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠇⣸⠀⠀⣠⡀⠀⢻⣟⠓⠀⠀⢸⢿⠷⡞⠉⠒⢄⠀⠀⣀⡀⠀⠀⠀⠀
+⠀⢀⡞⠀⠀⠀⠀⠀⠀⠀⣀⣤⠀⠀⠀⠀⠀⠀⢿⠀⢀⣯⡽⠀⠀⢿⡄⠀⢸⣿⣸⠀⠈⢆⠀⠈⡷⠉⢁⣈⣑⣄⠀⠀
+⠀⡸⠀⠀⠀⠀⣀⣤⣶⣿⡿⠋⠀⠀⠀⠀⢀⣠⡬⢧⣸⣿⠃⠀⠀⠀⢣⣀⣾⣿⣏⡀⠀⢀⡇⠀⡇⡴⢉⣀⠤⠼⣧⠀
+⢀⠇⠀⠀⣠⣾⠿⠛⠉⡟⠀⠀⠀⠀⠀⢳⣼⡋⢶⢾⡉⠓⠤⡠⠤⠒⠊⠙⣿⣿⠿⠃⠀⣸⡇⠀⢉⣇⡼⢀⡠⠤⣼⡇
+⠘⠀⣠⡾⠋⠁⠀⠀⡼⠀⠀⠀⠀⠀⣴⣾⣿⣷⣌⡑⠛⠢⠄⠀⠀⢀⣀⡤⠚⠁⠀⠀⣰⡇⠹⣶⡏⠀⢹⡏⢀⣠⣼⠀
+⢸⡾⠋⠀⠀⠀⠀⠀⡇⠀⠀⠀⣠⣾⡿⠟⢛⣻⠿⠛⠋⡿⠓⢛⡽⠟⠣⣄⠀⠀⠀⠀⢿⠾⡄⠙⠳⠤⣤⡭⠿⠛⠁⠀
+⠀⠁⠀⠀⠀⠀⠀⢰⡇⠀⠀⣴⡿⠋⡴⠊⢁⡠⠴⠚⡏⠀⢀⡏⠀⠀⠀⠈⢏⠒⠢⠒⠉⢦⡀⠀⣰⡾⠋⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⢠⡇⠀⣼⠋⠀⠀⢧⠀⠘⣿⢳⢤⣸⣦⡀⡇⠀⠀⠀⠀⢸⠓⠦⠤⠔⠊⠉⠉⠁⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⢇⣸⠁⠀⠀⠀⣼⣷⣤⠎⠘⢒⡇⠈⠉⢻⡄⠀⠀⢀⡞⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠘⡇⠀⠀⠀⠀⠘⢺⣶⠆⣠⠞⠁⠀⠀⢸⠱⣤⣴⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀        
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢻⣿⣄⣀⠀⢀⢠⣿⡾⢿⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀            ------------------
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢘⣷⡿⠿⡿⠛⡿⣹⠁⡏⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀             | 1 = baixar tudo |
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡰⠁⣰⢁⠇⢰⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀            ------------------
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣠⠤⢴⠁⢠⣿⣞⣀⣼⠷⠦⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀             | 2 = escolher msm|
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢰⠁⠸⣤⡯⠤⠟⠛⡦⠀⣀⠤⢶⡃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀            ------------------
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢠⠞⢷⡦⠀⠀⢠⡔⢯⠁⣀⣉⣉⡠⢿⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⡤⠜⠓⠶⣤⣄⣀⣀⣼⡞⠛⡟⠉⠀⠀⢀⠔⠛⠓⠢⢄⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⣾⣁⣀⡀⠀⠀⠀⠑⢄⠀⠀⢧⣼⠀⠀⠀⡴⠁⠀⠀⠀⠀⠀⠈⠳⡀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⣠⠞⠁⠀⠀⠀⠉⠢⡀⠀⠀⠈⡆⢀⣾⣿⣀⣀⢸⡁⠀⠀⠀⠀⠀⠀⠀⢀⣹⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⡴⠁⠀⠀⠀⠀⠀⠀⠀⠘⡀⠀⣠⡿⠟⠁⠉⠉⠛⠛⠛⠿⠶⠶⠶⠶⠿⠛⠛⠋⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⣥⡀⠀⠀⠀⠀⠀⢀⣀⣤⡷⠟⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠉⠛⠻⠶⠶⠾⠛⠛⠉⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+'''
+
+ascii_art2 = '''
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⣀⣀⣀⣀⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⣤⣴⣶⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣶⣶⣤⣄⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣤⣶⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣶⣦⣀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣴⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣦⡀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣴⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠿⠟⠛⠉⠉        __   _____   ___ ___ 
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣴⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠟⠋⠀⠀             \ \ / / _ \ / __/ _ |
+⢀⣠⣤⣶⣦⣤⣤⣤⣤⣤⣴⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠟⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀   \ V / (_) | (_|  __/
+⢸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣥⣤⣤⣀⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀    \_/ \___/ \___\___|
+⠈⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠿⠿⠿⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣶⣤⣀⠀⠀⠀⠀⠀⠀
+⠀⠘⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠿⠋⠁⠀⠀⠀⠀⠀⠈⢻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣦⡀⠀⠀⠀    __      _ 
+⠀⠀⠙⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣦⡀⠀   / _|    (_)
+⠀⠀⠀⣽⣿⡿⠛⢿⣿⣿⣿⣿⣿⣿⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⡄  | |_ ___  _ 
+⠀⠀⠀⣿⣿⠀⠀⠘⣿⣿⣿⣿⣿⡏⠀⠀⠀⠀⠀⠀⠀⣴⣶⣦⡀⠀⠀⢻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠿⠿⠿  |  _/ _ \| |
+⠀⠀⠀⣿⣿⠀⠀⠀⢹⣿⣿⣿⣿⠁⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⠀⠀⢸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠟⠛⠉⠉⠀⠀⠀⠀⠀⠀  | || (_) | |
+⠀⠀⠀⢹⣿⠀⠀⠀⢀⣿⣿⣿⣿⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⡇⠀⢸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠟⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀  |_| \___/|_|
+⠀⠀⠀⠘⣿⡆⠀⠀⢸⣿⣿⡟⠃⠀⠀⠀⠀⠀⠀⠀⠀⠸⣿⣿⣿⡇⠀⣸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣶⣤⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠹⣿⡄⠀⠘⣿⣿⣷⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⠛⠛⠃⢠⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣶⣄⠀⠀⠀⠀⠀⠀             _               _      
+⠀⠀⠀⠀⠀⠘⣿⣄⠀⠹⣿⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣴⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⡄⠀⠀⠀⠀            (_)             | |      
+⠀⠀⠀⠀⣠⣶⣿⣿⣿⣿⣿⣿⣿⣷⣶⣶⣦⣤⣤⣤⣤⣤⣶⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡄⠀⠀⠀  __ ___   ___ ___  __ _  __| | ___  
+⠀⠀⠀⠀⠘⠻⠿⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡄⠀⠀ / _` \ \ / / / __|/ _` |/ _` |/ _ \ 
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⠻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠿⠟⠛⠛⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠙⠛⠛⠿⠿⢿⣷⠀⠀| (_| |\ V /| \__ \ (_| | (_| | (_) |
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⠻⠿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠿⠟⠛⠉⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀ \__,_| \_/ |_|___/\__,_|\__,_|\___/ 
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠉⠉⠉⠉⠉⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+'''
 if response.status_code == 200:
     print_all()
-    print_centered(f"*** Bem-vindo ao programa de baixar roms! ***\n")
-
-    #time.sleep(2)
-    print_centered("Isso aqui tem um funcionamento simples,")
-    print_centered("você pode baixar ROMs de 1 console específico ou baixar de todos os consoles disponíveis,")
-    print_centered("e aí, qual você vai querer?")
+    print(ascii_art)
 
     #time.sleep(6)
-    resposta_init = input(f"1 - baixar todas as roms \n2 - baixar de consoles específicos\n = ")
+    resposta_init = input(f"resposta = ")
 
     if resposta_init == "1":
-        aviso1 = input("Tem que certeza que gostaria de baixar")
+        aviso1 = input("Voce tem ABSOLUTA certeza que gostaria de baixar as roms de TODOS os consoles ?(s/n)")
+        if aviso1.lower() == "n":
+            print("entao encerramos aqui :)")
+            sys.exit()
+        else:
+            print("Isso ira consumir uma grande parte do seu armazenamento")
+            time.sleep(2)
+            print(ascii_art2)
+            time.sleep(3)
+        
 
         soup = BeautifulSoup(response.text, 'html.parser')
 
@@ -168,7 +230,7 @@ if response.status_code == 200:
                                 href = link.get('href')
 
                                 if href.endswith('/'):
-                                    print(f"Link para pasta: {href} \n")
+                                    print(f"Link para pasta do console: {href} \n")
                                     page = requests.get(href)
 
                                     soup_page = BeautifulSoup(page.text, 'html.parser')
@@ -225,7 +287,7 @@ if response.status_code == 200:
                                                 print(f"Tamanho total dos arquivos: {total_size_gb:.2f} GB\n")
                                             else:
                                                 print(f"Tamanho total dos arquivos: {total_size_mb:.2f} MB\n")
-                                            escolha_dd = input(f"Agora quer baixar todas as roms ? \n1 - Claro \n2 - quero n fi")
+                                            escolha_dd = input(f"Agora quer baixar todas as roms ? \n1 - Claro \n2 - quero n fi\nResposta = ")
 
                                             if opcao_download == '1':
                                                 tabela = soup_page.find('table', class_='archext')
@@ -247,7 +309,7 @@ if response.status_code == 200:
                                                         print(f'Arquivo baixado com sucesso: {nome_arquivo_local}')
                                                     print("Baixando todas as roms...")
                                             else:
-                                                print("a entao ta bom")
+                                                print(f"a entao ta bom\n")
                                         else:
                                             print("Não há links para visualizar.")
                                     elif opcao_download == '3':
@@ -285,7 +347,7 @@ if response.status_code == 200:
                                     else:
                                         print("Opção inválida.")
                                 else:
-                                    print("Não é uma pasta")
+                                    pass
                     else:
                         print("Escolha inválida.")
                     resposta_continuar = input("Deseja continuar e baixar de outros consoles ? (s/n)? ").lower()
